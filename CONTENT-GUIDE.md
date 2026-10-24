@@ -1,31 +1,29 @@
-# Updating the website
+# Editing your GitHub Pages website
 
-Open the website and choose **Edit website** in its footer (or visit `/edit`).
-Sign in with the same ChatGPT account used to create the private Site.
+## Change text or a link
 
-1. Choose Profile, Books, Videos, or More links.
-2. Edit English and Malayalam text side by side.
-3. Add books or videos using the buttons at the bottom of each section.
-4. Paste full `https://` links. YouTube watch links create video thumbnails automatically.
-5. Select **Save changes**. Changes are stored in the website database and appear for all visitors.
+1. Sign in to GitHub as `abuseb` (or an authorized repository collaborator).
+2. Open https://github.com/abuseb/svattamattam/edit/main/content/site.json — also linked as **Edit website** at the bottom of the website.
+3. Find the field you want to change. `en` is English; `ml` is Malayalam.
+4. Change only the text between quotation marks. Keep commas and brackets intact. Use `\n` for a line break and `\"` for a quotation mark inside text.
+5. Select **Commit changes**, enter a short description, and commit to `main`.
+6. Open the repository's **Actions** tab. Wait for **Publish author website** to show a green check, then refresh https://abuseb.github.io/svattamattam/.
 
-A blank book-cover field uses a designed typographic title tile, not a reproduction of the book's cover. To show an actual cover, supply its HTTPS image URL. Portrait and cover images should be used with the relevant rights holder's permission.
+## Add books, videos or links
 
-Unsaved changes trigger a warning when leaving. If another session saves first, reload before editing again. Keep a copy of your changes before reloading.
+Copy one complete item in the relevant array, add a comma between items, and replace its fields. Give each item a unique `id`.
 
-## Access and launch
+- Books: title, description and category each have `en` and `ml` fields. `language` must be `English` or `Malayalam`. Set `url` to the publisher/book page. A blank `cover` uses the designed title tile.
+- Videos: provide bilingual title/description and the YouTube watch URL, for example `https://www.youtube.com/watch?v=VIDEO_ID`.
+- Links: provide a bilingual title and full HTTPS URL.
+- Images: upload to `public/images/` and reference `/images/filename.jpg`, or use a full HTTPS image URL.
 
-This first version is owner-private. The first successful save assigns the signed-in owner as editor. Save once while private **before** changing the audience. Future saves require that same editor identity. To authorize additional editors, update the server authorization deliberately; sharing a public link does not grant editing access. Public publication is a separate decision.
+To remove an item, delete its complete object and adjust the adjacent comma. The workflow checks the content before publishing; a failed build leaves the previous website live. GitHub's file history lets you recover earlier content.
 
-The Malayalam interface and summaries are draft translations for editorial review. Original English book titles remain in English where there is no verified Malayalam edition title.
+## What gets published?
 
-## Project
+GitHub builds only the static Pages entry point and publishes `dist-pages/`. No database, login server, or ChatGPT account is needed to view the public website. The old Sites browser editor does not update this GitHub version.
 
-- `app/content.ts`: initial content and validation
-- `app/site.tsx`: bilingual visitor website
-- `app/edit/editor.tsx`: editing form
-- `app/api/content/route.ts`: durable content and editor authorization
-- `db/schema.ts`, `drizzle/`: database schema and migration
-- `app/globals.css`: responsive design
+## Design changes
 
-Once content is saved in D1, changing the initial content file does not overwrite it. Use the editor for subsequent content changes.
+Edit `app/site.tsx` or `app/globals.css`, run `npm run build:pages`, and push to `main`, or ask Codex to do this. Public visitors can read the source repository, but cannot edit it without repository permissions.

@@ -1,32 +1,43 @@
 # Sebastian Vattamattam
 
-A bilingual English/Malayalam author website with a protected browser editor.
+A bilingual English/Malayalam author website, published with GitHub Pages.
 
-## Content editing
+**Website:** https://abuseb.github.io/svattamattam/
 
-Open `/edit` on the hosted Site, sign in, edit the forms, and save. See [CONTENT-GUIDE.md](CONTENT-GUIDE.md) for instructions and access details.
+## Edit the content
 
-## Development
+Open [content/site.json](https://github.com/abuseb/svattamattam/edit/main/content/site.json) on GitHub, edit the text or links, and choose **Commit changes** to save to `main`. The Publish author website workflow validates and publishes the change automatically. Only repository collaborators can commit changes.
 
-Requires Node.js 22.13 or later, npm, and Git.
+See [CONTENT-GUIDE.md](CONTENT-GUIDE.md) for detailed instructions. The website footer's **Edit website** link opens this same file.
+
+## Local development
+
+Use Node.js 22.13 or later and npm:
 
 ```sh
-npm run install:ci
-npm run build
-node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0000_empty_ken_ellis.sql
-npm run dev
+npm ci
+npm run dev:pages
 ```
 
-Apply the initial migration once per local database. Local and hosted content databases are separate. `npm run dev` provides a mock sign-in for local development only; production uses Sites authentication. Keep the Site private until the owner has saved once to establish the editor identity.
+Open the printed local URL with `/svattamattam/` appended if needed.
 
-The Sites workflow builds, stores source, and publishes the project. Hosting identity is in `.openai/hosting.json`; preserve it for future updates.
+```sh
+npm run build:pages
+npm run preview:pages
+```
 
-## Checks performed
+- `content/site.json`: author information, bilingual descriptions, books and videos
+- `app/site.tsx`: shared website layout
+- `app/globals.css`: design and responsive layout
+- `pages/`: GitHub Pages entry point
+- `vite.pages.config.ts`: static build and repository URL prefix
+- `.github/workflows/pages.yml`: automatic publication
+- `public/images/`: website images
 
-- TypeScript validation and production build.
-- Desktop preview and a narrow mobile preview.
-- English/Malayalam switching and book filtering.
-- Browser editor save confirmed and persisted in the local database.
-- Anonymous API writes rejected; cross-origin writes rejected.
+## Previous private version
 
-See [SOURCES.md](SOURCES.md) for content provenance and editorial review notes.
+The original Sites server/editor files and hosting identity are retained for recovery, but they are **not deployed to GitHub Pages**. GitHub Pages does not use the old database or `/edit` form. The two hosted versions do not automatically synchronize. Git history also retains the original implementation.
+
+## Verification
+
+The static build validates English and Malayalam fields and external links before publishing. An invalid edit fails the build and leaves the previous successful deployment live. Sources and editorial review notes are in [SOURCES.md](SOURCES.md).
